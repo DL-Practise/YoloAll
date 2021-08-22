@@ -29,7 +29,7 @@ def get_support_models():
             model_list.append(str(file).replace('.pth.tar', ''))
     return model_list
 
-def create_model(model_name='yolox_s', dev='cpu'):
+def create_model(model_name='yolox_nano', dev='cpu'):
     global model
     global device
     global num_classes

@@ -37,7 +37,7 @@ def get_support_models():
     return model_list
 
 
-def create_model(model_name='yolov3', dev='cpu'):
+def create_model(model_name='yolov3-tiny', dev='cpu'):
     global model
     global device
     model = None
