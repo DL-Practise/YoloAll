@@ -84,13 +84,16 @@ def inference(img):
     
 
     # draw det
-    outputs = outputs[0].cpu()
-    bboxes = outputs[:, 0:4]
-    bboxes /= img_info["ratio"]
-    cls = outputs[:, 6]
-    scores = outputs[:, 4] * outputs[:, 5]
-    vis_res = vis(img_info["raw_img"], bboxes, scores, cls, infer_conf, COCO_CLASSES)
+    if outputs[0] is None:
+        map_result['result'] = img
+    else:
+        outputs = outputs[0].cpu()
+        bboxes = outputs[:, 0:4]
+        bboxes /= img_info["ratio"]
+        cls = outputs[:, 6]
+        scores = outputs[:, 4] * outputs[:, 5]
+        vis_res = vis(img_info["raw_img"], bboxes, scores, cls, infer_conf, COCO_CLASSES)
 
-    map_result['result'] = vis_res
+        map_result['result'] = vis_res
     
     return map_result
