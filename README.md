@@ -63,3 +63,5 @@ YoloAll提供了非常方便的接口来集成您自己的yolo版本。将您自
 
 #进行一次推理，传入的img_array为opencv读取的图片
 * def inference(img_array)
+
+# QQ群：552703875
