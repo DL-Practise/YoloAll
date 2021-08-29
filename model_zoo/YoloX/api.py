@@ -25,8 +25,8 @@ def get_support_models():
     model_list=[]
     now_dir = os.path.dirname(os.path.realpath(__file__))
     for file in os.listdir(now_dir):
-        if str(file).endswith('.pth.tar') and 'yolox' in str(file):
-            model_list.append(str(file).replace('.pth.tar', ''))
+        if str(file).endswith('.pth') and 'yolox' in str(file):
+            model_list.append(str(file).replace('.pth', ''))
     return model_list
 
 def create_model(model_name='yolox_nano', dev='cpu'):
