@@ -1,0 +1,6 @@
+#torchvision>=0.8.2
+tqdm==4.59.0
+opencv_python==4.2.0.34
+torchsummary==1.5.1
+#torch>=1.7.1
+numpy==1.19.5

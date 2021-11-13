@@ -51,7 +51,7 @@ class AnnotationTransform(object):
             difficult = int(obj.find("difficult").text) == 1
             if not self.keep_difficult and difficult:
                 continue
-            name = obj.find("name").text.lower().strip()
+            name = obj.find("name").text.strip()
             bbox = obj.find("bndbox")
 
             pts = ["xmin", "ymin", "xmax", "ymax"]
@@ -144,7 +144,7 @@ class VOCDetection(Dataset):
 
         target = self.load_anno(index)
 
-        img_info = (width, height)
+        img_info = (height, width)
 
         return img, target, img_info, index
 

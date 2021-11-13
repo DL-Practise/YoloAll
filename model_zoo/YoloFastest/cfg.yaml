@@ -1,0 +1,12 @@
+alg_info:
+  name: yolofastestv2
+  version: releasev2
+  url: '?'
+yolo_fastest:
+  weight: coco2017-epoch-0.235624ap-model.pth
+  url: [xxx]
+  num_classes: 80
+  infer_conf: 0.25
+  nms_thre: 0.45
+  model_cfg: data/coco.data
+  name_file: data/coco.names

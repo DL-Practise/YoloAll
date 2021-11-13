@@ -4,13 +4,8 @@ import torch
 import importlib
 import numpy as np
 import cv2
-
-# no use function
-#def add_model_zoo_path():
-#    for dir in os.listdir('./model_zoo'):
-#        if os.path.isdir(os.path.join('./model_zoo',dir)):
-#            sub_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'model_zoo/'+str(dir))
-#            sys.path.append(sub_dir)
+from collections import OrderedDict
+from ruamel import yaml
 
 COCO_CLASSES = (
     "person",
@@ -180,42 +175,57 @@ COCO_COLORS = np.array(
     ]
 ).astype(np.float32).reshape(-1, 3)
 
-def add_one_model_path(model_name):
+
+def del_all_model_zoo_modules():
+    alg_names = []
     for dir in os.listdir('./model_zoo'):
         if os.path.isdir(os.path.join('./model_zoo',dir)):
-            if str(dir) == model_name:
-                #print('*** same')
-                sub_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'model_zoo/'+str(dir))
-                if sub_dir not in sys.path:
-                    sys.path.append(sub_dir)
-            else:
-                #print('*** not same')
-                sub_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'model_zoo/'+str(dir))
-                if sub_dir in sys.path:
-                    sys.path.remove(sub_dir)
+            alg_names.append(str(dir))
 
-                
+    # del path in sys.path
+    del_p = []
+    for p in sys.path:
+        for alg_name in alg_names:
+            if alg_name in p:
+                del_p.append(p)
+                break
+    for p in del_p:
+        sys.path.remove(p)
 
-def get_api_from_model(model_name):
+    # del modeules
+    old_alg_names = []
+    for alg_name in sys.modules.keys():
+        if 'from' in str(sys.modules[alg_name]) and \
+            'model_zoo' in str(sys.modules[alg_name]) and \
+            'YoloAll' in str(sys.modules[alg_name]):
+            old_alg_names.append(alg_name)
+        if 'namespace' in str(sys.modules[alg_name]) and hasattr(sys.modules[alg_name], '__path__'):
+            module_path = str(sys.modules[alg_name].__path__)
+            if 'model_zoo' in module_path and \
+               'YoloAll' in module_path:
+               old_alg_names.append(alg_name)
+            
+    for alg_name in old_alg_names:
+        del sys.modules[alg_name] 
+
+def add_one_model_path(alg_name):
+    sub_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'model_zoo/'+ alg_name)
+    sys.path.append(sub_dir)
+   
+def get_api_from_model(alg_name):
     api = None
-    add_one_model_path(model_name)
-    while api is None:
-        try:
-            api = importlib.import_module('model_zoo.%s.api'%model_name)
-        except ImportError as e:
-            # error info like: No module named 'utils.datasets'; 'utils' is not a package
-            print(str(e))
-            if "No module named" in str(e):
-                unknown_model = str(e).split(' ')[3].split('.')[0].replace('\'', '')
-                print('unknown model name is : ', unknown_model)
-                for known_model in sys.modules.keys():
-                    if known_model == unknown_model:
-                        #print('find model in sys.modules')
-                        del sys.modules[unknown_model] 
-                        #print('del model from sys.modules')
-                        break
+    del_all_model_zoo_modules()
+    add_one_model_path(alg_name)
+    
+    try:
+        api = importlib.import_module('model_zoo.%s.alg'%alg_name)
+        print('create api from', alg_name, 'success')
+    except ImportError as e:
+        print('create api from', alg_name, 'failed')
+        print('error:', str(e))   
+        api = None
+        
     return api
-
 
 def load_pre_train_ignore_name(net, pre_train):
     if pre_train == '':
@@ -263,8 +273,6 @@ def load_pre_train_ignore_name(net, pre_train):
 
         net.load_state_dict(new_dict, strict=False)
 
-
-
 def vis(img, boxes, scores, cls_ids, conf=0.5, class_names=COCO_CLASSES):
 
     for i in range(len(boxes)):
@@ -299,3 +307,72 @@ def vis(img, boxes, scores, cls_ids, conf=0.5, class_names=COCO_CLASSES):
 
     return img
 
+class AlgBase:
+    def __init__(self):
+        self.cfg_file = None
+        self.ignore_keys = []
+
+    def load_cfg(self):
+        print(self.cfg_file)
+        with open(self.cfg_file, "r", encoding='utf-8') as f:
+            self.cfg_info  = yaml.round_trip_load(f)
+        
+    def save_cfg(self):
+        with open(self.cfg_file, "w", encoding='utf-8') as f:
+            yaml.round_trip_dump(self.cfg_info, f, default_flow_style=False)
+
+    def get_model_cfg(self, model_name):
+        cfg_map = {}
+        for key in self.cfg_info[model_name]:
+            if key not in self.ignore_keys:
+                cfg_map[key] = self.cfg_info[model_name][key]
+        return cfg_map
+        
+    def put_model_cfg(self, model_name, cfg_map):
+        # the cfg_map is from qt widget , so they are all strings
+        # i need to write them to cfg.yaml by my self
+        #for key in cfg_map.keys():
+        #    self.cfg_info[model_name][key] = cfg_map[key]
+        old_lines = None
+        with open(self.cfg_file, "r", encoding='utf-8') as f:
+            old_lines = f.readlines()
+        
+        new_lines = []
+        into_model_flag = False
+        out_model_flag = False
+        for line in  old_lines:
+            top_key = False if line.startswith(' ') else True
+            key_name = line.split(':')[0].strip('\r\n').replace(' ', '')
+            
+            if key_name == model_name and into_model_flag is False:
+                into_model_flag = True
+            elif into_model_flag and top_key:
+                out_model_flag = True
+            
+            if into_model_flag and not out_model_flag and key_name in cfg_map.keys():
+                new_line = line.split(':')[0] + ': ' + cfg_map[key_name]
+                if '\r' in line:
+                    new_line = new_line + '\r'
+                if '\n' in line:
+                    new_line = new_line + '\n'
+                new_lines.append(new_line)
+            else:
+                new_lines.append(line)
+
+        with open(self.cfg_file, "w", encoding='utf-8') as f:
+            f.writelines(new_lines)
+
+        self.load_cfg()
+
+    def get_support_models(self):
+        model_list=[]
+        for key in self.cfg_info.keys():
+            if key != 'alg_info':
+                model_list.append(key)
+        return model_list
+
+if __name__ == "__main__":
+    api = get_api_from_model('YoloFastest')
+    api = get_api_from_model('YoloV5')
+    
+ 

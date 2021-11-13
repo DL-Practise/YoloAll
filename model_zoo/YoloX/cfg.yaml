@@ -1,0 +1,54 @@
+alg_info:
+  name: yolo x
+  version: release v0.1.0pre
+  url: https://github.com/Megvii-BaseDetection/YOLOX
+yolox_nano:
+  weight: yolox_nano.pth
+  url: ['https://github.com/Megvii-BaseDetection/YOLOX/releases/download/0.1.0/yolox_nano.pth']
+  num_classes: 80
+  infer_conf: 0.25
+  nms_thre: 0.45
+  infer_size: [416, 416]
+  rgb_means: [0.485, 0.456, 0.406]
+  std: [0.229, 0.224, 0.225]
+  class_names: []
+yolox_tiny:
+  weight: yolox_tiny.pth
+  url: [https://github.com/Megvii-BaseDetection/YOLOX/releases/download/0.1.1rc0/yolox_tiny.pth]
+  num_classes: 80
+  infer_conf: 0.25
+  nms_thre: 0.45
+  infer_size: [416, 416]
+  rgb_means: [0.485, 0.456, 0.406]
+  std: [0.229, 0.224, 0.225]
+  class_names: []
+yolox_s:
+  weight: yolox_s.pth
+  url: [https://github.com/Megvii-BaseDetection/YOLOX/releases/download/0.1.1rc0/yolox_s.pth]
+  num_classes: 80
+  infer_conf: 0.25
+  nms_thre: 0.45
+  infer_size: [640, 640]
+  rgb_means: [0.485, 0.456, 0.406]
+  std: [0.229, 0.224, 0.225]
+  class_names: []
+yolox_m:
+  weight: yolox_m.pth
+  url: [https://github.com/Megvii-BaseDetection/YOLOX/releases/download/0.1.1rc0/yolox_m.pth]
+  num_classes: 80
+  infer_conf: 0.25
+  nms_thre: 0.45
+  infer_size: [640, 640]
+  rgb_means: [0.485, 0.456, 0.406]
+  std: [0.229, 0.224, 0.225]
+  class_names: []
+yolox_l:
+  weight: yolox_l.pth
+  url: [https://github.com/Megvii-BaseDetection/YOLOX/releases/download/0.1.1rc0/yolox_l.pth]
+  num_classes: 80
+  infer_conf: 0.25
+  nms_thre: 0.45
+  infer_size: [640, 640]
+  rgb_means: [0.485, 0.456, 0.406]
+  std: [0.229, 0.224, 0.225]
+  class_names: []

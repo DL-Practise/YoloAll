@@ -13,7 +13,6 @@ import os
 import cv2
 import math
 from PIL import Image
-from alg_pytorch import AlgPytorch 
 
 # ui配置文件
 cUi, cBase = uic.loadUiType("image_widget.ui")
@@ -35,6 +34,7 @@ class ImageWidget(QWidget, cUi):
         self.camera_cap = None
         
         self.qpixmap = None
+        self.qpixmap_bg = None
         self.cAlg = None
         self.infer = None
         self.class_map  = None
@@ -50,6 +50,8 @@ class ImageWidget(QWidget, cUi):
                       QColor(255,227,132),
                       QColor(255,255,0),
                       QColor(128,138,135)]
+
+        self.change_background('normal')
 
         
     @pyqtSlot()
@@ -141,6 +143,11 @@ class ImageWidget(QWidget, cUi):
     def set_alg_handle(self, handle):
         self.cAlg = handle
         
+    def change_background(self, bg_name):
+        self.qpixmap_bg = None
+        bg_path = './bg_' + bg_name + '.png'
+        self.qpixmap_bg = QPixmap(bg_path)
+        self.update()
         
     def draw_image(self, painter):
         pen = QPen()
@@ -154,10 +161,13 @@ class ImageWidget(QWidget, cUi):
             painter.setFont(font)
             painter.drawText(10, 30, 'time=%.4f seconds fps=%.4f' % (self.alg_time, 1 / self.alg_time))
         else:
+            if self.qpixmap_bg is not None:
+                painter.drawPixmap(QtCore.QRect(0, 0, self.width(), self.height()), self.qpixmap_bg)
             pen.setColor(QColor(0, 0, 0))
             pen.setWidth(4)
             painter.setPen(pen)
             painter.drawRect(0, 0, self.width(), self.height())
+            
         
     def draw_infer(self, painter):
         if self.infer is None:
