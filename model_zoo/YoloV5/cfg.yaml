@@ -4,7 +4,7 @@ alg_info:
   url: https://github.com/ultralytics/yolov5/releases
 yolov5_n:
   weight: yolov5n.pt
-  url: [https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5n.pt]
+  url: [http://www.lgddx.cn/download/yoloall/yolov5n.pt, https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5n.pt]
   num_classes: 80
   infer_conf: 0.25
   nms_thre: 0.45
@@ -14,7 +14,7 @@ yolov5_n:
   class_names: []
 yolov5_s:
   weight: yolov5s.pt
-  url: [https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5s.pt]
+  url: [http://www.lgddx.cn/download/yoloall/yolov5s.pt, https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5s.pt]
   num_classes: 80
   infer_conf: 0.25
   nms_thre: 0.45
@@ -24,7 +24,7 @@ yolov5_s:
   class_names: []
 yolov5_m:
   weight: yolov5m.pt
-  url: [https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5m.pt]
+  url: [http://www.lgddx.cn/download/yoloall/yolov5m.pt, https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5m.pt]
   num_classes: 80
   infer_conf: 0.25
   nms_thre: 0.45
