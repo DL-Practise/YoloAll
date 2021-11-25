@@ -4,7 +4,7 @@ alg_info:
   url: https://github.com/Megvii-BaseDetection/YOLOX
 yolox_nano:
   weight: yolox_nano.pth
-  url: [http://www.lgddx.cn/download/yoloall/yolox_nano.pth, https://github.com/Megvii-BaseDetection/YOLOX/releases/download/0.1.0/yolox_nano.pth]
+  url: [http://www.lgddx.cn/projects/yolo_all/weights/yolox_nano.pth, https://github.com/Megvii-BaseDetection/YOLOX/releases/download/0.1.0/yolox_nano.pth]
   num_classes: 80
   infer_conf: 0.25
   nms_thre: 0.45
@@ -14,7 +14,7 @@ yolox_nano:
   class_names: []
 yolox_tiny:
   weight: yolox_tiny.pth
-  url: [http://www.lgddx.cn/download/yoloall/yolox_tiny.pth, https://github.com/Megvii-BaseDetection/YOLOX/releases/download/0.1.1rc0/yolox_tiny.pth]
+  url: [http://www.lgddx.cn/projects/yolo_all/weights/yolox_tiny.pth, https://github.com/Megvii-BaseDetection/YOLOX/releases/download/0.1.1rc0/yolox_tiny.pth]
   num_classes: 80
   infer_conf: 0.25
   nms_thre: 0.45
@@ -24,7 +24,7 @@ yolox_tiny:
   class_names: []
 yolox_s:
   weight: yolox_s.pth
-  url: [http://www.lgddx.cn/download/yoloall/yolox_s.pth, https://github.com/Megvii-BaseDetection/YOLOX/releases/download/0.1.1rc0/yolox_s.pth]
+  url: [http://www.lgddx.cn/projects/yolo_all/weights/yolox_s.pth, https://github.com/Megvii-BaseDetection/YOLOX/releases/download/0.1.1rc0/yolox_s.pth]
   num_classes: 80
   infer_conf: 0.25
   nms_thre: 0.45
@@ -34,7 +34,7 @@ yolox_s:
   class_names: []
 yolox_m:
   weight: yolox_m.pth
-  url: [http://www.lgddx.cn/download/yoloall/yolox_m.pth, https://github.com/Megvii-BaseDetection/YOLOX/releases/download/0.1.1rc0/yolox_m.pth]
+  url: [http://www.lgddx.cn/projects/yolo_all/weights/yolox_m.pth, https://github.com/Megvii-BaseDetection/YOLOX/releases/download/0.1.1rc0/yolox_m.pth]
   num_classes: 80
   infer_conf: 0.25
   nms_thre: 0.45

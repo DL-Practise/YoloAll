@@ -4,7 +4,7 @@ alg_info:
   url: https://github.com/dog-qiuqiu/Yolo-FastestV2
 yolo_fastest:
   weight: coco2017-epoch-0.235624ap-model.pth
-  url: [http://www.lgddx.cn/download/yoloall/coco2017-epoch-0.235624ap-model.pth]
+  url: [http://www.lgddx.cn/projects/yolo_all/weights/coco2017-epoch-0.235624ap-model.pth]
   num_classes: 80
   infer_conf: 0.25
   nms_thre: 0.45
