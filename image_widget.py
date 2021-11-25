@@ -145,7 +145,7 @@ class ImageWidget(QWidget, cUi):
         
     def change_background(self, bg_name):
         self.qpixmap_bg = None
-        bg_path = './bg_' + bg_name + '.png'
+        bg_path = './icons/bg_' + bg_name + '.png'
         self.qpixmap_bg = QPixmap(bg_path)
         self.update()
         

@@ -10,10 +10,12 @@ from PyQt5.QtWidgets import *
 from PyQt5 import QtCore, QtGui, uic
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+from PyQt5.QtWebEngineWidgets import *
 from image_widget import ImageWidget
 from common_utils import get_api_from_model
 import threading
 import qdarkstyle
+import json
 try:
     import queue
 except ImportError:
@@ -35,8 +37,19 @@ class MainWidget(QWidget, cUi):
         # init imagewidget
         self.cImageWidget = ImageWidget()
         self.cImageWidget.set_alg_handle(self)
-        self.tabWidget.addTab(self.cImageWidget, "inference")
+        self.tabWidget.addTab(self.cImageWidget, "预测")
+        self.tabWidget.setTabIcon(0, QIcon(QPixmap("./icons/no_news.png")))
         
+        # init Web for news
+        self.has_news = False
+        with open('./news_id.json', 'r') as f:
+            self.news_id = json.load(f)
+        self.cBrowser = QWebEngineView()
+        self.cBrowser.load(QUrl('http://www.lgddx.cn/projects/yolo_all/news/index.htm'))
+        self.tabWidget.addTab(self.cBrowser, "消息")
+        self.tabWidget.setTabIcon(1, QIcon(QPixmap("./icons/no_news.png")))
+
+
         # init treewidget
         self.treeModel.header().setVisible(False)
         
@@ -58,12 +71,33 @@ class MainWidget(QWidget, cUi):
         if str(info).startswith('cmd:'):
             if 'load models finished' in str(info):
                 self.init_model_tree()
+        elif str(info).startswith('news_id'):
+            self.tabWidget.setTabIcon(1, QIcon(QPixmap("./icons/news.png")))
         else:
             self.logEdit.append(info)        
                 
+    def check_news(self, x):
+        lines = x.split('\n')
+        for line in lines:
+            if 'news_id' in line:
+                id = int(line.split(':')[-1])
+                if id != self.news_id['news_id']:
+                    self.news_id['news_id'] = id
+                    self.has_news = True
+                    with open('./news_id.json', 'w') as f:
+                        json.dump(self.news_id, f)
+                    self.log_sig.emit('news_id')
+                    break
+                
     def det_thread_func(self):
         self.log_sig.emit('检测线程启动')
+        
+        # search all algs
         self.search_alg_and_model()
+        
+        # check news_id 
+        self.cBrowser.page().toPlainText(self.check_news)
+        
         while self.det_thread_flag:
             try:
                 img = self.det_thread_queue.get(block=True, timeout=1.0)
@@ -154,7 +188,6 @@ class MainWidget(QWidget, cUi):
             print('you select alg')
         else:
             print('yolo select model: ', item.parent().text(0), item.text(0))
-            
             # clear the cfg edit
             for i in range(self.cfg_layout.count()):
                 widget = self.cfg_layout.itemAt(i).widget()
@@ -211,9 +244,9 @@ class MainWidget(QWidget, cUi):
         if self.radioGpu.isChecked():
             if not torch.cuda.is_available():
                 reply = QMessageBox.warning(self,
-	                  u'警告', 
-	                  u'cuda不可用，请检查', 
-	                  QMessageBox.Yes)
+                      u'警告', 
+                      u'cuda不可用，请检查', 
+                      QMessageBox.Yes)
                 self.radioGpu.setChecked(False)
 
 
