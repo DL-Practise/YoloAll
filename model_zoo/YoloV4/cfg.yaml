@@ -1,0 +1,12 @@
+alg_info:
+  name: yolo v4
+  version: unknown
+  url: https://github.com/Tianxiaomo/pytorch-YOLOv4
+yolov4:
+  weight: yolov4.weights
+  url: ['http']
+  infer_conf: 0.4
+  nms_thre: 0.6
+  infer_size: [640, 640]
+  cfgfile: cfg/yolov4.cfg
+  namesfile: data/coco.names
