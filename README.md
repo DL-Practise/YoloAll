@@ -55,20 +55,20 @@ python main_widget.py
 ![image](https://user-images.githubusercontent.com/16218143/143549133-c6de1bb6-9ba3-4530-88b8-32981ecf8958.png)
 
 ### 预测
-下载完预训练模型，并放到指定文件夹后，再次点击模型管理界面的模型，就会开始创建模型，并显示创建模型成功的界面。
-![image](https://user-images.githubusercontent.com/16218143/143549185-4716bc4a-0d40-436c-b2b3-b97cc964f0f3.png)
+下载完预训练模型，并放到指定文件夹后，再次点击模型管理界面的模型，就会开始创建模型，并显示创建模型成功的界面  
+![image](https://user-images.githubusercontent.com/16218143/143549185-4716bc4a-0d40-436c-b2b3-b97cc964f0f3.png)  
 此时可以点击预测界面的Photo按钮，选择一张图片进行预测，也可以点击Video按键，选择一段视频文件进行预测，也可以点击Camera按钮，启动摄像头进行拍摄和预测。
 
 ### 修改预测参数
-在预测过程中，如果需要进行CPU、GPU的切换，或者修改预测参数，例如修改图像分辨率，置信度阈值，nms阈值等，可以在配置界面进行修改的勾选或者修改，修改完后，点击保存按钮，软件会重新创建模型，等模型创建成功后，可以继续使用新的配置进行预测。
-![image](https://user-images.githubusercontent.com/16218143/143549367-2fc14ca1-3427-4dda-988d-d73abe40750d.png)
+在预测过程中，如果需要进行CPU、GPU的切换，或者修改预测参数，例如修改图像分辨率，置信度阈值，nms阈值等，可以在配置界面进行修改的勾选或者修改，修改完后，点击保存按钮，软件会重新创建模型，等模型创建成功后，可以继续使用新的配置进行预测。  
+![image](https://user-images.githubusercontent.com/16218143/143549367-2fc14ca1-3427-4dda-988d-d73abe40750d.png)  
 
 
-###预测信息
-预测成功后，会在预测界面展示预测的信息，图中的方框即为预测出来的目标，红色的文字是预测的速度和FPS。大家可以切换不同的模型，进行预测结果以及耗时的对比。
-![image](https://user-images.githubusercontent.com/16218143/143549379-4f4281ef-b6e0-4953-b2b9-8118b1853751.png)
+### 预测信息
+预测成功后，会在预测界面展示预测的信息，图中的方框即为预测出来的目标，红色的文字是预测的速度和FPS。大家可以切换不同的模型，进行预测结果以及耗时的对比。  
+![image](https://user-images.githubusercontent.com/16218143/143549379-4f4281ef-b6e0-4953-b2b9-8118b1853751.png)  
 
 		
-# YoloAll演示视频(V2.0)
+# YoloAll演示视频(V2.0)  
 后续补充。。。
 
