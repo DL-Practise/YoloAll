@@ -6,6 +6,7 @@ import numpy as np
 import cv2
 from collections import OrderedDict
 from ruamel import yaml
+import time
 
 COCO_CLASSES = (
     "person",
@@ -194,7 +195,9 @@ def del_all_model_zoo_modules():
 
     # del modeules
     old_alg_names = []
-    for alg_name in sys.modules.keys():
+    all_keys = sys.modules.keys()
+    time.sleep(0.2)
+    for alg_name in all_keys:
         if 'from' in str(sys.modules[alg_name]) and \
             'model_zoo' in str(sys.modules[alg_name]) and \
             'YoloAll' in str(sys.modules[alg_name]):
