@@ -3,10 +3,16 @@ alg_info:
   version: unknown
   url: https://github.com/Tianxiaomo/pytorch-YOLOv4
 yolov4:
-  weight: yolov4.weights
-  url: [http://www.lgddx.cn/projects/yolo_all/weights/yolov4.weights, https://drive.google.com/open?id=1cewMfusmPjYWbrnuJRuKhPMwRe_b9PaT]
-  infer_conf: 0.4
-  nms_thre: 0.6
-  infer_size: [640, 640]
-  cfgfile: cfg/yolov4.cfg
-  namesfile: data/coco.names
+  device:
+    dev_type: cpu
+  result:
+    save_result: 0
+    save_dir: ./save/yolov4/yolov4/
+  normal:
+    weight: yolov4.weights
+    url: [http://www.lgddx.cn/projects/yolo_all/weights/yolov4.weights, https://drive.google.com/open?id=1cewMfusmPjYWbrnuJRuKhPMwRe_b9PaT]
+    infer_conf: 0.4
+    nms_thre: 0.6
+    infer_size: [640, 640]
+    cfgfile: cfg/yolov4.cfg
+    namesfile: data/coco.names

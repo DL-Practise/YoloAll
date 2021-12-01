@@ -3,102 +3,162 @@ alg_info:
   version: release v6.0
   url: https://github.com/ultralytics/yolov5/releases
 yolov5_n:
-  weight: yolov5n.pt
-  url: [http://www.lgddx.cn/projects/yolo_all/weights/yolov5n.pt, https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5n.pt]
-  num_classes: 80
-  infer_conf: 0.25
-  nms_thre: 0.45
-  infer_size: [640, 640]
-  mean: [0., 0., 0.]
-  std: [255., 255., 255.]
-  class_names: []
+  device:
+    dev_type: cpu
+  result:
+    save_result: 0
+    save_dir: ./save/yolov5/yolov5_n/
+  normal:
+    weight: yolov5n.pt
+    url: [http://www.lgddx.cn/projects/yolo_all/weights/yolov5n.pt, https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5n.pt]
+    num_classes: 80
+    infer_conf: 0.25
+    nms_thre: 0.45
+    infer_size: [640, 640]
+    mean: [0., 0., 0.]
+    std: [255., 255., 255.]
+    class_names: []
 yolov5_s:
-  weight: yolov5s.pt
-  url: [http://www.lgddx.cn/projects/yolo_all/weights/yolov5s.pt, https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5s.pt]
-  num_classes: 80
-  infer_conf: 0.25
-  nms_thre: 0.45
-  infer_size: [640, 640]
-  mean: [0., 0., 0.]
-  std: [255., 255., 255.]
-  class_names: []
+  device:
+    dev_type: cpu
+  result:
+    save_result: 0
+    save_dir: ./save/yolov5/yolov5_s/
+  normal:
+    weight: yolov5s.pt
+    url: [http://www.lgddx.cn/projects/yolo_all/weights/yolov5s.pt, https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5s.pt]
+    num_classes: 80
+    infer_conf: 0.25
+    nms_thre: 0.45
+    infer_size: [640, 640]
+    mean: [0., 0., 0.]
+    std: [255., 255., 255.]
+    class_names: []
 yolov5_m:
-  weight: yolov5m.pt
-  url: [http://www.lgddx.cn/projects/yolo_all/weights/yolov5m.pt, https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5m.pt]
-  num_classes: 80
-  infer_conf: 0.25
-  nms_thre: 0.45
-  infer_size: [640, 640]
-  mean: [0., 0., 0.]
-  std: [255., 255., 255.]
-  class_names: []
+  device:
+    dev_type: cpu
+  result:
+    save_result: 0
+    save_dir: ./save/yolov5/yolov5_m/
+  normal:
+    weight: yolov5m.pt
+    url: [http://www.lgddx.cn/projects/yolo_all/weights/yolov5m.pt, https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5m.pt]
+    num_classes: 80
+    infer_conf: 0.25
+    nms_thre: 0.45
+    infer_size: [640, 640]
+    mean: [0., 0., 0.]
+    std: [255., 255., 255.]
+    class_names: []
 yolov5_l:
-  weight: yolov5l.pt
-  url: [https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5l.pt]
-  num_classes: 80
-  infer_conf: 0.25
-  nms_thre: 0.45
-  infer_size: [640, 640]
-  mean: [0., 0., 0.]
-  std: [255., 255., 255.]
-  class_names: []
+  device:
+    dev_type: cpu
+  result:
+    save_result: 0
+    save_dir: ./save/yolov5/yolov5_l/
+  normal:
+    weight: yolov5l.pt
+    url: [https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5l.pt]
+    num_classes: 80
+    infer_conf: 0.25
+    nms_thre: 0.45
+    infer_size: [640, 640]
+    mean: [0., 0., 0.]
+    std: [255., 255., 255.]
+    class_names: []
 yolov5_x:
-  weight: yolov5x.pt
-  url: [https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5x.pt]
-  num_classes: 80
-  infer_conf: 0.25
-  nms_thre: 0.45
-  infer_size: [640, 640]
-  mean: [0., 0., 0.]
-  std: [255., 255., 255.]
-  class_names: []
+  device:
+    dev_type: cpu
+  result:
+    save_result: 0
+    save_dir: ./save/yolov5/yolov5_x/
+  normal:
+    weight: yolov5x.pt
+    url: [https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5x.pt]
+    num_classes: 80
+    infer_conf: 0.25
+    nms_thre: 0.45
+    infer_size: [640, 640]
+    mean: [0., 0., 0.]
+    std: [255., 255., 255.]
+    class_names: []
 yolov5_n6:
-  weight: yolov5n6.pt
-  url: [https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5n6.pt]
-  num_classes: 80
-  infer_conf: 0.25
-  nms_thre: 0.45
-  infer_size: [1280, 1280]
-  mean: [0., 0., 0.]
-  std: [255., 255., 255.]
-  class_names: []
+  device:
+    dev_type: cpu
+  result:
+    save_result: 0
+    save_dir: ./save/yolov5/yolov5_n6/
+  normal:
+    weight: yolov5n6.pt
+    url: [https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5n6.pt]
+    num_classes: 80
+    infer_conf: 0.25
+    nms_thre: 0.45
+    infer_size: [1280, 1280]
+    mean: [0., 0., 0.]
+    std: [255., 255., 255.]
+    class_names: []
 yolov5_s6:
-  weight: yolov5s6.pt
-  url: [https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5s6.pt]
-  num_classes: 80
-  infer_conf: 0.25
-  nms_thre: 0.45
-  infer_size: [1280, 1280]
-  mean: [0., 0., 0.]
-  std: [255., 255., 255.]
-  class_names: []
+  device:
+    dev_type: cpu
+  result:
+    save_result: 0
+    save_dir: ./save/yolov5/yolov5_s6/
+  normal:
+    weight: yolov5s6.pt
+    url: [https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5s6.pt]
+    num_classes: 80
+    infer_conf: 0.25
+    nms_thre: 0.45
+    infer_size: [1280, 1280]
+    mean: [0., 0., 0.]
+    std: [255., 255., 255.]
+    class_names: []
 yolov5_m6:
-  weight: yolov5m6.pt
-  url: [https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5m6.pt]
-  num_classes: 80
-  infer_conf: 0.25
-  nms_thre: 0.45
-  infer_size: [1280, 1280]
-  mean: [0., 0., 0.]
-  std: [255., 255., 255.]
-  class_names: []
+  device:
+    dev_type: cpu
+  result:
+    save_result: 0
+    save_dir: ./save/yolov5/yolov5_m6/
+  normal:
+    weight: yolov5m6.pt
+    url: [https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5m6.pt]
+    num_classes: 80
+    infer_conf: 0.25
+    nms_thre: 0.45
+    infer_size: [1280, 1280]
+    mean: [0., 0., 0.]
+    std: [255., 255., 255.]
+    class_names: []
 yolov5_l6:
-  weight: yolov5l6.pt
-  url: [https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5l6.pt]
-  num_classes: 80
-  infer_conf: 0.25
-  nms_thre: 0.45
-  infer_size: [1280, 1280]
-  mean: [0., 0., 0.]
-  std: [255., 255., 255.]
-  class_names: []
+  device:
+    dev_type: cpu
+  result:
+    save_result: 0
+    save_dir: ./save/yolov5/yolov5_l6/
+  normal:
+    weight: yolov5l6.pt
+    url: [https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5l6.pt]
+    num_classes: 80
+    infer_conf: 0.25
+    nms_thre: 0.45
+    infer_size: [1280, 1280]
+    mean: [0., 0., 0.]
+    std: [255., 255., 255.]
+    class_names: []
 yolov5_x6:
-  weight: yolov5x6.pt
-  url: [https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5x6.pt]
-  num_classes: 80
-  infer_conf: 0.25
-  nms_thre: 0.45
-  infer_size: [1280, 1280]
-  mean: [0., 0., 0.]
-  std: [255., 255., 255.]
-  class_names: []
+  device:
+    dev_type: cpu
+  result:
+    save_result: 0
+    save_dir: ./save/yolov5/yolov5_x6/
+  normal:
+    weight: yolov5x6.pt
+    url: [https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5x6.pt]
+    num_classes: 80
+    infer_conf: 0.25
+    nms_thre: 0.45
+    infer_size: [1280, 1280]
+    mean: [0., 0., 0.]
+    std: [255., 255., 255.]
+    class_names: []

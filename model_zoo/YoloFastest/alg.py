@@ -26,8 +26,8 @@ class Alg(AlgBase):
         self.device = dev
         self.model_name = model_name
 
-        model_cfg = os.path.join(os.path.dirname(os.path.realpath(__file__)), self.cfg_info[self.model_name]['model_cfg'])
-        model_weight = os.path.join(os.path.dirname(os.path.realpath(__file__)), self.cfg_info[self.model_name]['weight'])
+        model_cfg = os.path.join(os.path.dirname(os.path.realpath(__file__)), self.cfg_info[self.model_name]['normal']['model_cfg'])
+        model_weight = os.path.join(os.path.dirname(os.path.realpath(__file__)), self.cfg_info[self.model_name]['normal']['weight'])
         self.cfg = utils.load_datafile(model_cfg)
         self.model = detector.Detector(self.cfg["classes"], self.cfg["anchor_num"], True).to(self.device)
         self.model.load_state_dict(torch.load(model_weight, map_location=self.device))
@@ -48,12 +48,12 @@ class Alg(AlgBase):
             preds = self.model(img)
             output = utils.handel_preds(preds, self.cfg, self.device)
             output_boxes = utils.non_max_suppression(output, 
-                                                    conf_thres = float(self.cfg_info[self.model_name]['infer_conf']), 
-                                                    iou_thres = float(self.cfg_info[self.model_name]['nms_thre']))
+                                                    conf_thres = float(self.cfg_info[self.model_name]['normal']['infer_conf']), 
+                                                    iou_thres = float(self.cfg_info[self.model_name]['normal']['nms_thre']))
 
         #加载label names
         LABEL_NAMES = []
-        self.cfg["names"] = os.path.join(os.path.dirname(os.path.realpath(__file__)), self.cfg_info[self.model_name]['name_file'])
+        self.cfg["names"] = os.path.join(os.path.dirname(os.path.realpath(__file__)), self.cfg_info[self.model_name]['normal']['name_file'])
         with open(self.cfg["names"], 'r') as f:
             for line in f.readlines():
                 LABEL_NAMES.append(line.strip())

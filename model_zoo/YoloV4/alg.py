@@ -30,11 +30,11 @@ class Alg(AlgBase):
         self.model_name = model_name
 
         cfgfile = os.path.join(os.path.dirname(os.path.realpath(__file__)), 
-                                     self.cfg_info[model_name]['cfgfile']) 
+                                     self.cfg_info[model_name]['normal']['cfgfile']) 
         weightfile = os.path.join(os.path.dirname(os.path.realpath(__file__)), 
-                                       self.cfg_info[model_name]['weight'])  
+                                       self.cfg_info[model_name]['normal']['weight'])  
         namesfile = os.path.join(os.path.dirname(os.path.realpath(__file__)), 
-                                      self.cfg_info[model_name]['namesfile']) 
+                                      self.cfg_info[model_name]['normal']['namesfile']) 
                                       
         self.class_names = load_class_names(namesfile)
             
@@ -44,7 +44,7 @@ class Alg(AlgBase):
         
         # Load pretrain
         if not os.path.exists(weightfile):
-            return 'error: weight is not download, please download it from: %s'%self.cfg_info[model_name]['url']
+            return 'error: weight is not download, please download it from: %s'%self.cfg_info[model_name]['normal']['url']
         self.model.load_weights(weightfile)
         self.model.eval()
 
@@ -55,7 +55,7 @@ class Alg(AlgBase):
     
     def inference(self, img_array):
         map_result = {'type':'img'}
-        img_resize = cv2.resize(img_array,  tuple(self.cfg_info[self.model_name]['infer_size']))
+        img_resize = cv2.resize(img_array,  tuple(self.cfg_info[self.model_name]['normal']['infer_size']))
         
         sized = cv2.resize(img_array, (self.model.width, self.model.height))
         sized = cv2.cvtColor(sized, cv2.COLOR_BGR2RGB)
@@ -64,8 +64,8 @@ class Alg(AlgBase):
         use_cuda = True if self.device == 'cuda' else False
         boxes = do_detect(self.model, 
                           sized, 
-                          float(self.cfg_info[self.model_name]['infer_conf']), 
-                          float(self.cfg_info[self.model_name]['nms_thre']), 
+                          float(self.cfg_info[self.model_name]['normal']['infer_conf']), 
+                          float(self.cfg_info[self.model_name]['normal']['nms_thre']), 
                           use_cuda)
         finish = time.time()
 

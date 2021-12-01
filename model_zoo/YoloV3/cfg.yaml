@@ -3,20 +3,32 @@ alg_info:
   version: unknown
   url: https://github.com/eriklindernoren/PyTorch-YOLOv3
 yolov3_tiny:
-  weight: yolov3-tiny.weights
-  url: [http://www.lgddx.cn/projects/yolo_all/weights/yolov3-tiny.weights, https://pjreddie.com/media/files/yolov3-tiny.weights]
-  cfg_file: yolov3-tiny.cfg
-  num_classes: 80
-  infer_conf: 0.25
-  nms_thre: 0.45
-  infer_size: 416
-  class_names: []
+  device:
+    dev_type: cpu
+  result:
+    save_result: 0
+    save_dir: ./save/yolov3/yolov3_tiny/
+  normal:
+    weight: yolov3-tiny.weights
+    url: [http://www.lgddx.cn/projects/yolo_all/weights/yolov3-tiny.weights, https://pjreddie.com/media/files/yolov3-tiny.weights]
+    cfg_file: yolov3-tiny.cfg
+    num_classes: 80
+    infer_conf: 0.25
+    nms_thre: 0.45
+    infer_size: 416
+    class_names: []
 yolov3_std:
-  weight: yolov3.weights
-  url: [http://www.lgddx.cn/projects/yolo_all/weights/yolov3.weights, https://pjreddie.com/media/files/yolov3.weights]
-  cfg_file: yolov3.cfg
-  num_classes: 80
-  infer_conf: 0.25
-  nms_thre: 0.45
-  infer_size: 608
-  class_names: []
+  device:
+    dev_type: cpu
+  result:
+    save_result: 0
+    save_dir: ./save/yolov3/yolov3_std/
+  normal:
+    weight: yolov3.weights
+    url: [http://www.lgddx.cn/projects/yolo_all/weights/yolov3.weights, https://pjreddie.com/media/files/yolov3.weights]
+    cfg_file: yolov3.cfg
+    num_classes: 80
+    infer_conf: 0.25
+    nms_thre: 0.45
+    infer_size: 608
+    class_names: []

@@ -38,8 +38,8 @@ class Alg(AlgBase):
         self.device = dev
         self.model_name = model_name
 
-        model_cfg = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config/%s'%(self.cfg_info[model_name]['cfg_file']))
-        model_weight = os.path.join(os.path.dirname(os.path.realpath(__file__)), '%s'%(self.cfg_info[model_name]['weight']))
+        model_cfg = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config/%s'%(self.cfg_info[model_name]['normal']['cfg_file']))
+        model_weight = os.path.join(os.path.dirname(os.path.realpath(__file__)), '%s'%(self.cfg_info[model_name]['normal']['weight']))
         self.model = load_model(model_cfg, self.device, model_weight)
         self.model.eval()
 
@@ -48,15 +48,15 @@ class Alg(AlgBase):
         map_result = {'type':'img'}
         img_tensor = transforms.Compose([
             DEFAULT_TRANSFORMS,
-            Resize(int(self.cfg_info[self.model_name]['infer_size']))])(
+            Resize(int(self.cfg_info[self.model_name]['normal']['infer_size']))])(
                 (img_array, np.zeros((1, 5))))[0].unsqueeze(0)
         if self.device == "cuda":
             img_tensor = img_tensor.cuda()
 
         with torch.no_grad():
             detections = self.model(img_tensor)
-            detections = non_max_suppression(detections, float(self.cfg_info[self.model_name]['infer_conf']), float(self.cfg_info[self.model_name]['nms_thre']))
-            detections = rescale_boxes(detections[0], int(self.cfg_info[self.model_name]['infer_size']), img_array.shape[:2])
+            detections = non_max_suppression(detections, float(self.cfg_info[self.model_name]['normal']['infer_conf']), float(self.cfg_info[self.model_name]['normal']['nms_thre']))
+            detections = rescale_boxes(detections[0], int(self.cfg_info[self.model_name]['normal']['infer_size']), img_array.shape[:2])
         
         valid_pred = detections.cpu()
         boxes = valid_pred[:,0:4]

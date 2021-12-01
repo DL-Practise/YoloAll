@@ -29,10 +29,10 @@ class Alg(AlgBase):
         self.model_name = model_name
 
          # Load model
-        pth_name = self.cfg_info[model_name]['weight']
+        pth_name = self.cfg_info[model_name]['normal']['weight']
         pre_train = os.path.join(os.path.dirname(os.path.realpath(__file__)), '%s'%(pth_name))
         if not os.path.exists(pre_train):
-            return 'error: weight is not download, please download it from: %s'%self.cfg_info[model_name]['url']
+            return 'error: weight is not download, please download it from: %s'%self.cfg_info[model_name]['normal']['url']
 
         self.model = attempt_load(pre_train, map_location='cpu')  # load FP32 model
         self.model.eval()
@@ -44,8 +44,8 @@ class Alg(AlgBase):
     
     def inference(self, img_array):
         map_result = {'type':'img'}
-        img_resize = cv2.resize(img_array,  tuple(self.cfg_info[self.model_name]['infer_size']))
-        img = (img_resize - self.cfg_info[self.model_name]['mean']) / self.cfg_info[self.model_name]['std']
+        img_resize = cv2.resize(img_array,  tuple(self.cfg_info[self.model_name]['normal']['infer_size']))
+        img = (img_resize - self.cfg_info[self.model_name]['normal']['mean']) / self.cfg_info[self.model_name]['normal']['std']
         img = img.transpose((2,0,1))    
         img_tensor = torch.from_numpy(img.astype(np.float32)).unsqueeze(0)
 
@@ -55,8 +55,8 @@ class Alg(AlgBase):
         with torch.no_grad():
             pred = self.model(img_tensor, augment=False)[0]
             pred = non_max_suppression(pred, 
-                                       float(self.cfg_info[self.model_name]['infer_conf']), 
-                                       float(self.cfg_info[self.model_name]['nms_thre']), 
+                                       float(self.cfg_info[self.model_name]['normal']['infer_conf']), 
+                                       float(self.cfg_info[self.model_name]['normal']['nms_thre']), 
                                        classes=None, 
                                        agnostic=False)
         
@@ -64,8 +64,8 @@ class Alg(AlgBase):
         boxes = valid_pred[:,0:4]
         cls = valid_pred[:, 5]
         scores = valid_pred[:, 4]
-        x_rate = img_array.shape[1] /  self.cfg_info[self.model_name]['infer_size'][0]
-        y_rate = img_array.shape[0] /  self.cfg_info[self.model_name]['infer_size'][1]
+        x_rate = img_array.shape[1] /  self.cfg_info[self.model_name]['normal']['infer_size'][0]
+        y_rate = img_array.shape[0] /  self.cfg_info[self.model_name]['normal']['infer_size'][1]
         boxes[:,0:4:2] = boxes[:,0:4:2] * x_rate
         boxes[:,1:4:2] = boxes[:,1:4:2] * y_rate
         vis(img_array, boxes, scores, cls, conf=0.0)

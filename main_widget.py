@@ -49,6 +49,8 @@ class MainWidget(QWidget, cUi):
         self.tabWidget.addTab(self.cBrowser, "消息")
         self.tabWidget.setTabIcon(1, QIcon(QPixmap("./icons/no_news.png")))
 
+        # init cfg tab
+        self.btnSaveCfg.hide()
 
         # init treewidget
         self.treeModel.header().setVisible(False)
@@ -150,7 +152,7 @@ class MainWidget(QWidget, cUi):
         self.log_sig.emit('  停止ImageWidget')
         self.cImageWidget.stop_all()
 
-        pretrain_path = './model_zoo/' + self.alg_name + '/' + self.model_cfg['weight']
+        pretrain_path = './model_zoo/' + self.alg_name + '/' + self.model_cfg['normal']['weight']
         if not os.path.exists(pretrain_path):
             self.log_sig.emit('  创建模型: %s 失败，预训练模型未下载'%str(self.model_name))
             self.cImageWidget.change_background('load_fail')
@@ -158,21 +160,13 @@ class MainWidget(QWidget, cUi):
             box.setIcon(QMessageBox.Critical)
             box.setTextInteractionFlags(Qt.TextSelectableByMouse)
             box.setWindowTitle(u"预训练模型未下载")
-            box.setText(u'请到如下地址下载预训练模型\n放到 model_zoo/%s 下面\n下载地址：\n%s'%(self.alg_name, self.model_cfg['url']))
+            box.setText(u'请到如下地址下载预训练模型\n放到 model_zoo/%s 下面\n下载地址：\n%s'%(self.alg_name, self.model_cfg['normal']['url']))
             box.setTextInteractionFlags(Qt.TextSelectableByMouse)
             box.exec()
-            '''
-            reply = QMessageBox.warning(self,
-                u'预训练模型未下载', 
-                u'请到如下地址下载预训练模型\n放到 model_zoo/%s 下面\n下载地址：\n%s'%(self.alg_name, self.model_cfg['url']), 
-                QMessageBox.Yes)
-            '''
             self.alg = None
-            
             return
-
         if self.alg is not None:
-            device = 'cuda' if self.radioGpu.isChecked() else 'cpu'
+            device = 'cuda' if self.model_cfg['device']['dev_type'] == 'gpu' else 'cpu'
             self.log_sig.emit('  设备类型:' + device)
             self.alg.create_model(self.model_name, device)
             self.log_sig.emit('  创建模型: %s 结束'%str(self.model_name))
@@ -182,19 +176,78 @@ class MainWidget(QWidget, cUi):
             self.cImageWidget.change_background('load_fail')
             self.alg = None
         
+    def _translate_str(self, ori_str):
+        translate_map = {'device': '设备配置',
+                         'dev_type': '设备类型(cpu/gpu)',
+                         'result': '检测结果配置',
+                         'save_result': '是否保存结果',
+                         'save_dir': '保存路径',
+                         'normal': '通用配置',
+                         }
+        if ori_str in translate_map.keys():
+            return translate_map[ori_str]
+        else:
+            return ori_str
+
+    def _init_cfg_widget(self):
+        self.btnSaveCfg.hide()
+        for i in range(self.cfg_layout.count()):
+            widget = self.cfg_layout.itemAt(i).widget()
+            if widget is not None:
+                widget.deleteLater()
+        self.model_cfg_widget = {}
+        if self.alg is not None:
+            self.btnSaveCfg.show()
+            self.model_cfg = self.alg.get_model_cfg(self.model_name)
+            for key in self.model_cfg.keys():
+                label_title = QLabel()
+                label_title.setText(self._translate_str(key))
+                self.cfg_layout.addWidget(label_title)
+                self.model_cfg_widget[key] = {}
+                for sub_key in self.model_cfg[key]:
+                    frame = QFrame()
+                    edit_layout = QHBoxLayout()
+                    edit_key = QLineEdit()
+                    edit_value = QLineEdit()
+                    edit_key.setText(self._translate_str(sub_key))
+                    edit_key.setReadOnly(False)
+                    edit_key.setFocusPolicy(Qt.NoFocus)
+                    edit_value.setText(str(self.model_cfg[key][sub_key]))
+                    edit_layout.addWidget(edit_key)
+                    edit_layout.addWidget(edit_value)
+                    edit_layout.setStretch(0, 1)
+                    edit_layout.setStretch(1, 2)
+                    self.cfg_layout.addLayout(edit_layout)
+                    self.model_cfg_widget[key][sub_key] = edit_value
+                label_space = QLabel()
+                self.cfg_layout.addWidget(label_space)
+            
+            spacer = QSpacerItem(20, 20, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+            self.cfg_layout.addItem(spacer)
+            
+    def _get_cfg_widget(self):
+        for key in self.model_cfg_widget.keys():
+            for sub_key in self.model_cfg_widget[key].keys():
+                edit_widget = self.model_cfg_widget[key][sub_key]
+                old_cfg_value = self.model_cfg[key][sub_key]
+                new_cfg_value = edit_widget.text()
+                if sub_key == 'dev_type':
+                    if new_cfg_value != 'cpu':
+                        if not torch.cuda.is_available():
+                            reply = QMessageBox.warning(self,
+                                u'警告', 
+                                u'当前pytorch不支持cuda, 将创建cpu模型', 
+                                QMessageBox.Yes)
+                            edit_widget.setText('cpu')
+                            new_cfg_value = 'cpu'
+                self.model_cfg[key][sub_key] = new_cfg_value
+
     def on_treeModel_itemClicked(self, item, seq):
         print(item.text(0), item.parent())
         if item.parent() is None:
             print('you select alg')
         else:
             print('yolo select model: ', item.parent().text(0), item.text(0))
-            # clear the cfg edit
-            for i in range(self.cfg_layout.count()):
-                widget = self.cfg_layout.itemAt(i).widget()
-                if widget is not None:
-                    widget.deleteLater()
-            self.model_cfg_widget = {}
-            
             self.alg_name = item.parent().text(0)
             self.model_name = item.text(0)
             api = get_api_from_model(self.alg_name)
@@ -203,52 +256,15 @@ class MainWidget(QWidget, cUi):
                 print('error, the api can not import')
             else:
                 self.alg = api.Alg()
-                self.model_cfg = self.alg.get_model_cfg(self.model_name)
-                group_box = QGroupBox()
-                group_box.setTitle(self.model_name)
-                group_layout = QVBoxLayout()
-                for key in self.model_cfg.keys():
-                    edit_layout = QHBoxLayout()
-                    edit_key = QLineEdit()
-                    edit_value = QLineEdit()
-                    edit_key.setText(key)
-                    edit_key.setReadOnly(False)
-                    edit_key.setFocusPolicy(Qt.NoFocus)
-                    edit_value.setText(str(self.model_cfg[key]))
-                    edit_layout.addWidget(edit_key)
-                    edit_layout.addWidget(edit_value)
-                    edit_layout.setStretch(0, 1)
-                    edit_layout.setStretch(1, 2)
-                    group_layout.addLayout(edit_layout)
-                    self.model_cfg_widget[key] = edit_value
-                
-                spacer = QSpacerItem(20, 20, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
-                group_layout.addItem(spacer)
-                group_box.setLayout(group_layout)  
-                self.cfg_layout.addWidget(group_box)
+                self._init_cfg_widget()
                 self.updaet_model()
     
     @pyqtSlot()
     def on_btnSaveCfg_clicked(self):
         print('button btnSaveCfg clicked')
-        for key in self.model_cfg_widget.keys():
-            edit_widget = self.model_cfg_widget[key]
-            old_cfg_value = self.model_cfg[key]
-            new_cfg_value = edit_widget.text()
-            self.model_cfg[key] = new_cfg_value
+        self._get_cfg_widget()
         self.alg.put_model_cfg(self.model_name, self.model_cfg)
         self.updaet_model()
-
-    def on_radioGpu_toggled(self):
-        device = 'cuda' if self.radioGpu.isChecked() else 'cpu'
-        if self.radioGpu.isChecked():
-            if not torch.cuda.is_available():
-                reply = QMessageBox.warning(self,
-                      u'警告', 
-                      u'cuda不可用，请检查', 
-                      QMessageBox.Yes)
-                self.radioGpu.setChecked(False)
-
 
     def closeEvent(self, event):        
         reply = QMessageBox.question(self, 'Message',"Are you sure to quit?",

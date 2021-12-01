@@ -326,9 +326,11 @@ class AlgBase:
 
     def get_model_cfg(self, model_name):
         cfg_map = {}
-        for key in self.cfg_info[model_name]:
-            if key not in self.ignore_keys:
-                cfg_map[key] = self.cfg_info[model_name][key]
+        for key in self.cfg_info[model_name].keys():
+            cfg_map[key] = {}
+            for sub_key in self.cfg_info[model_name][key].keys():
+                if sub_key not in self.ignore_keys:
+                    cfg_map[key][sub_key] = self.cfg_info[model_name][key][sub_key]
         return cfg_map
         
     def put_model_cfg(self, model_name, cfg_map):
@@ -343,15 +345,21 @@ class AlgBase:
         new_lines = []
         into_model_flag = False
         out_model_flag = False
+        key_back = None
         for line in  old_lines:
             top_key = False if line.startswith(' ') else True
             key_name = line.split(':')[0].strip('\r\n').replace(' ', '')
             
             if key_name == model_name and into_model_flag is False:
                 into_model_flag = True
+                new_lines.append(line)
+                continue
             elif into_model_flag and top_key:
                 out_model_flag = True
+                new_lines.append(line)
+                continue
             
+            '''
             if into_model_flag and not out_model_flag and key_name in cfg_map.keys():
                 new_line = line.split(':')[0] + ': ' + cfg_map[key_name]
                 if '\r' in line:
@@ -359,6 +367,26 @@ class AlgBase:
                 if '\n' in line:
                     new_line = new_line + '\n'
                 new_lines.append(new_line)
+            else:
+                new_lines.append(line)
+            '''
+
+            if into_model_flag and not out_model_flag:
+                if line.startswith(' ') and not line.startswith('   '):
+                    key_back = key_name
+                    new_lines.append(line)
+                elif line.startswith('   '):
+                    if key_back in cfg_map.keys() and key_name in cfg_map[key_back].keys():
+                        new_line = line.split(':')[0] + ': ' + cfg_map[key_back][key_name]
+                        if '\r' in line:
+                            new_line = new_line + '\r'
+                        if '\n' in line:
+                            new_line = new_line + '\n'
+                        new_lines.append(new_line)
+                    else:
+                        new_lines.append(line)
+                else:
+                    assert(False)
             else:
                 new_lines.append(line)
 

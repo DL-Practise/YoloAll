@@ -3,10 +3,16 @@ alg_info:
   version: releasev2
   url: https://github.com/dog-qiuqiu/Yolo-FastestV2
 yolo_fastest:
-  weight: coco2017-epoch-0.235624ap-model.pth
-  url: [http://www.lgddx.cn/projects/yolo_all/weights/coco2017-epoch-0.235624ap-model.pth]
-  num_classes: 80
-  infer_conf: 0.25
-  nms_thre: 0.45
-  model_cfg: data/coco.data
-  name_file: data/coco.names
+  device:
+    dev_type: cpu
+  result:
+    save_result: 0
+    save_dir: ./save/yolofastestv2/yolo_fastest
+  normal:
+    weight: coco2017-epoch-0.235624ap-model.pth
+    url: ['http://www.lgddx.cn/projects/yolo_all/weights/coco2017-epoch-0.235624ap-model.pth']
+    num_classes: 80
+    infer_conf: 0.25
+    nms_thre: 0.45
+    model_cfg: data/coco.data
+    name_file: data/coco.names
