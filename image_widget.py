@@ -129,7 +129,6 @@ class ImageWidget(QWidget, cUi):
         self.alg_time = time_spend
         self.update()
     
-    
     def stop_all(self):
         self.timer.stop()
         self.qpixmap = None
@@ -168,7 +167,6 @@ class ImageWidget(QWidget, cUi):
             painter.setPen(pen)
             painter.drawRect(0, 0, self.width(), self.height())
             
-        
     def draw_infer(self, painter):
         if self.infer is None:
             return
@@ -201,11 +199,8 @@ class ImageWidget(QWidget, cUi):
         score = self.infer['result'][2]
         painter.drawText(10, 50, 'top1=%s(%.4f)' % (name, score))
         
- 
-    
     def draw_infer_det(self, painter):
         pass
-
     
     def draw_infer_kp(self, painter):
         x_scale = self.width() / self.qpixmap.width()

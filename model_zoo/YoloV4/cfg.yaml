@@ -10,7 +10,7 @@ yolov4:
     save_dir: ./save/yolov4/yolov4/
   normal:
     weight: yolov4.weights
-    url: [http://www.lgddx.cn/projects/yolo_all/weights/yolov4.weights, https://drive.google.com/open?id=1cewMfusmPjYWbrnuJRuKhPMwRe_b9PaT]
+    url: ['http://www.lgddx.cn/projects/yolo_all/weights/yolov4.weights', 'https://drive.google.com/open?id=1cewMfusmPjYWbrnuJRuKhPMwRe_b9PaT']
     infer_conf: 0.4
     nms_thre: 0.6
     infer_size: [640, 640]

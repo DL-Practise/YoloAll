@@ -6,9 +6,9 @@ import torch
 from yolox.data.data_augment import preproc
 from yolox.data.datasets import COCO_CLASSES
 from yolox.exp import get_exp
-from yolox.utils import fuse_model, get_model_info, postprocess, vis
+from yolox.utils import fuse_model, get_model_info, postprocess
 import matplotlib.pyplot as plt
-from yolox.utils.visualize import vis
+from common_utils import vis
 from common_utils import AlgBase
 import yaml
 

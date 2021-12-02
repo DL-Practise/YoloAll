@@ -68,7 +68,15 @@ class Alg(AlgBase):
                           float(self.cfg_info[self.model_name]['normal']['nms_thre']), 
                           use_cuda)
         finish = time.time()
-
-        img_ret = plot_boxes_cv2(img_array, boxes[0], savename=None, class_names=self.class_names)
-        map_result['result'] = img_ret
+        print(boxes)
+        boxes = np.squeeze(np.array(boxes), axis=0)
+        print(boxes)
+        width = img_array.shape[1]
+        height = img_array.shape[0]
+        boxes[:, 0] = boxes[:, 0] * width
+        boxes[:, 1] = boxes[:, 1] * height
+        boxes[:, 2] = boxes[:, 2] * width
+        boxes[:, 3] = boxes[:, 3] * height
+        vis(img_array, boxes[:, 0:4], boxes[:, 5], boxes[:, 6], conf=float(self.cfg_info[self.model_name]['normal']['infer_conf']))
+        map_result['result'] = img_array
         return map_result

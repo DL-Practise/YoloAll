@@ -68,6 +68,6 @@ class Alg(AlgBase):
         y_rate = img_array.shape[0] /  self.cfg_info[self.model_name]['normal']['infer_size'][1]
         boxes[:,0:4:2] = boxes[:,0:4:2] * x_rate
         boxes[:,1:4:2] = boxes[:,1:4:2] * y_rate
-        vis(img_array, boxes, scores, cls, conf=0.0)
+        vis(img_array, boxes, scores, cls, conf=float(self.cfg_info[self.model_name]['normal']['infer_conf']))
         map_result['result'] = img_array
         return map_result

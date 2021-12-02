@@ -62,18 +62,16 @@ class Alg(AlgBase):
         scale_h, scale_w = h / self.cfg["height"], w / self.cfg["width"]
 
         #绘制预测框
-        for box in output_boxes[0]:
-            box = box.tolist()
-        
-            obj_score = box[4]
-            category = LABEL_NAMES[int(box[5])]
+        preds = output_boxes[0]
+        boxes = preds[:, 0:4]
+        scores = preds[:, 4]
+        clses = preds[:, 5]
+        boxes[:, 0] = boxes[:, 0] * scale_w
+        boxes[:, 1] = boxes[:, 1] * scale_h
+        boxes[:, 2] = boxes[:, 2] * scale_w
+        boxes[:, 3] = boxes[:, 3] * scale_h
 
-            x1, y1 = int(box[0] * scale_w), int(box[1] * scale_h)
-            x2, y2 = int(box[2] * scale_w), int(box[3] * scale_h)
-
-            cv2.rectangle(img_array, (x1, y1), (x2, y2), (255, 255, 0), 2)
-            cv2.putText(img_array, '%.2f' % obj_score, (x1, y1 - 5), 0, 0.7, (0, 255, 0), 2)	
-            cv2.putText(img_array, category, (x1, y1 - 25), 0, 0.7, (0, 255, 0), 2)
+        vis(img_array, boxes, scores, clses, conf=0.0)
 
         map_result['result'] = img_array
         return map_result

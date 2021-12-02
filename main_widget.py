@@ -34,24 +34,31 @@ class MainWidget(QWidget, cUi):
         cUi.__init__(self)
         self.setupUi(self)
         
+        # init title
+        self.setWindowTitle('YoloAll V2.0.0')
+
         # init imagewidget
         self.cImageWidget = ImageWidget()
         self.cImageWidget.set_alg_handle(self)
-        self.tabWidget.addTab(self.cImageWidget, "预测")
+        self.tabWidget.insertTab(0, self.cImageWidget, "预测")
         self.tabWidget.setTabIcon(0, QIcon(QPixmap("./icons/no_news.png")))
         
-        # init Web for news
+        # init config widget
+        self.btnSaveCfg.hide()
+        self.tabWidget.setTabIcon(1, QIcon(QPixmap("./icons/no_news.png")))
+
+        # init help widget
         self.has_news = False
         with open('./news_id.json', 'r') as f:
             self.news_id = json.load(f)
         self.cBrowser = QWebEngineView()
         self.cBrowser.load(QUrl('http://www.lgddx.cn/projects/yolo_all/news/index.htm'))
-        self.tabWidget.addTab(self.cBrowser, "消息")
-        self.tabWidget.setTabIcon(1, QIcon(QPixmap("./icons/no_news.png")))
+        self.tabWidget.insertTab(2, self.cBrowser, "帮助")
+        self.tabWidget.setTabIcon(2, QIcon(QPixmap("./icons/no_news.png")))
 
-        # init cfg tab
-        self.btnSaveCfg.hide()
-
+        # show imagewidget
+        self.tabWidget.setCurrentIndex(0)
+    
         # init treewidget
         self.treeModel.header().setVisible(False)
         
@@ -68,15 +75,37 @@ class MainWidget(QWidget, cUi):
         self.det_thread_queue = queue.Queue(maxsize=2)
         self.det_thread_handle = threading.Thread(target=self.det_thread_func, args=())
         self.det_thread_handle.start()
+        self.update_model_flag = False
+        self.create_model_process = 0
+        self.create_process_dialog = None
 
     def slot_log_info(self, info):
         if str(info).startswith('cmd:'):
             if 'load models finished' in str(info):
                 self.init_model_tree()
+            if 'start create model' in str(info):
+                self.tabWidget.setCurrentIndex(0)
+                self.cImageWidget.change_background('start_load')               
+            if 'create model failed' in str(info):
+                self.cImageWidget.change_background('load_fail')
+            if 'create model success' in str(info):
+                self.cImageWidget.change_background('load_success')
+            if 'pretrain unget' in str(info):
+                box_message = str(info).split('=')[-1]
+                box = QMessageBox()
+                box.setIcon(QMessageBox.Critical)
+                box.setTextInteractionFlags(Qt.TextSelectableByMouse)
+                box.setWindowTitle(u"预训练模型未下载")
+                box.setText(box_message)
+                box.setTextInteractionFlags(Qt.TextSelectableByMouse)
+                box.exec()
+            if 'update title' in str(info):
+                title_name = str(info).split('=')[-1]
+                self.setWindowTitle(title_name)
         elif str(info).startswith('news_id'):
-            self.tabWidget.setTabIcon(1, QIcon(QPixmap("./icons/news.png")))
+            self.tabWidget.setTabIcon(2, QIcon(QPixmap("./icons/news.png")))
         else:
-            self.logEdit.append(info)        
+            self.logEdit.append('<font color="#FF9090">%s</font>'%(info))    
                 
     def check_news(self, x):
         lines = x.split('\n')
@@ -101,8 +130,11 @@ class MainWidget(QWidget, cUi):
         self.cBrowser.page().toPlainText(self.check_news)
         
         while self.det_thread_flag:
+            if self.update_model_flag:
+                self.updaet_model()
+                self.update_model_flag = False
             try:
-                img = self.det_thread_queue.get(block=True, timeout=1.0)
+                img = self.det_thread_queue.get(block=True, timeout=0.2)
                 #self.log_sig.emit('det thread get a img')
             except queue.Empty:
                 img = None
@@ -135,7 +167,7 @@ class MainWidget(QWidget, cUi):
                     self.alg_model_map[str(sub_dir)] = []
                     self.log_sig.emit('>>加载模型: %s 失败'%str(sub_dir))
         self.log_sig.emit('>加载模型结束')
-        self.log_sig.emit('cmd: load models finished')
+        self.log_sig.emit('cmd:load models finished')
 
     def init_model_tree(self):
         for alg in self.alg_model_map.keys():
@@ -147,35 +179,32 @@ class MainWidget(QWidget, cUi):
                 item_model.setText(0, model)
                     
     def updaet_model(self):
-        self.cImageWidget.change_background('start_load')
+        self.log_sig.emit('cmd:start create model')
         self.log_sig.emit('开始创建模型: %s'%str(self.model_name))
         self.log_sig.emit('  停止ImageWidget')
         self.cImageWidget.stop_all()
+        title_name = 'YoloAll V2.0.0 当前模型:' + self.model_name
 
         pretrain_path = './model_zoo/' + self.alg_name + '/' + self.model_cfg['normal']['weight']
         if not os.path.exists(pretrain_path):
             self.log_sig.emit('  创建模型: %s 失败，预训练模型未下载'%str(self.model_name))
-            self.cImageWidget.change_background('load_fail')
-            box = QMessageBox()
-            box.setIcon(QMessageBox.Critical)
-            box.setTextInteractionFlags(Qt.TextSelectableByMouse)
-            box.setWindowTitle(u"预训练模型未下载")
-            box.setText(u'请到如下地址下载预训练模型\n放到 model_zoo/%s 下面\n下载地址：\n%s'%(self.alg_name, self.model_cfg['normal']['url']))
-            box.setTextInteractionFlags(Qt.TextSelectableByMouse)
-            box.exec()
+            box_info = u'请到如下地址下载预训练模型\n放到 model_zoo/%s 下面\n下载地址：\n%s'%(self.alg_name, self.model_cfg['normal']['url'])
+            self.log_sig.emit('cmd:pretrain unget=%s'%box_info)
             self.alg = None
             return
         if self.alg is not None:
             device = 'cuda' if self.model_cfg['device']['dev_type'] == 'gpu' else 'cpu'
+            title_name += ' 设备类型:' + device
             self.log_sig.emit('  设备类型:' + device)
             self.alg.create_model(self.model_name, device)
+            self.log_sig.emit('cmd:create model success')
             self.log_sig.emit('  创建模型: %s 结束'%str(self.model_name))
-            self.cImageWidget.change_background('load_success')
         else:
+            self.log_sig.emit('cmd:create model failed')
             self.log_sig.emit('  创建模型: %s 失败，算法句柄尚未创建'%str(self.model_name))
-            self.cImageWidget.change_background('load_fail')
             self.alg = None
-        
+        self.log_sig.emit('cmd:update title=%s'%(title_name))
+
     def _translate_str(self, ori_str):
         translate_map = {'device': '设备配置',
                          'dev_type': '设备类型(cpu/gpu)',
@@ -190,18 +219,20 @@ class MainWidget(QWidget, cUi):
             return ori_str
 
     def _init_cfg_widget(self):
-        self.btnSaveCfg.hide()
+        old_items = []
         for i in range(self.cfg_layout.count()):
-            widget = self.cfg_layout.itemAt(i).widget()
-            if widget is not None:
-                widget.deleteLater()
+            old_items.append(self.cfg_layout.itemAt(i))
+            
+        for old_item in old_items:
+            self.cfg_layout.removeItem(old_item) 
+ 
         self.model_cfg_widget = {}
         if self.alg is not None:
             self.btnSaveCfg.show()
             self.model_cfg = self.alg.get_model_cfg(self.model_name)
             for key in self.model_cfg.keys():
                 label_title = QLabel()
-                label_title.setText(self._translate_str(key))
+                label_title.setText('<font color="#FF9090">%s</font>'%(self._translate_str(key)))
                 self.cfg_layout.addWidget(label_title)
                 self.model_cfg_widget[key] = {}
                 for sub_key in self.model_cfg[key]:
@@ -257,14 +288,16 @@ class MainWidget(QWidget, cUi):
             else:
                 self.alg = api.Alg()
                 self._init_cfg_widget()
-                self.updaet_model()
+                #self.updaet_model()
+                self.update_model_flag = True
     
     @pyqtSlot()
     def on_btnSaveCfg_clicked(self):
         print('button btnSaveCfg clicked')
         self._get_cfg_widget()
         self.alg.put_model_cfg(self.model_name, self.model_cfg)
-        self.updaet_model()
+        #self.updaet_model()
+        self.update_model_flag = True
 
     def closeEvent(self, event):        
         reply = QMessageBox.question(self, 'Message',"Are you sure to quit?",

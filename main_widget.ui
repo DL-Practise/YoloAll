@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>823</width>
-    <height>597</height>
+    <width>954</width>
+    <height>699</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,14 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,3">
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout" stretch="10">
+        <layout class="QVBoxLayout" name="verticalLayout" stretch="0,10">
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string>模型列表</string>
+           </property>
+          </widget>
+         </item>
          <item>
           <widget class="QTreeWidget" name="treeModel">
            <column>
@@ -51,8 +58,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>570</width>
-                <height>429</height>
+                <width>668</width>
+                <height>514</height>
                </rect>
               </property>
               <layout class="QGridLayout" name="gridLayout_2">
