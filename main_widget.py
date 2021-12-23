@@ -35,7 +35,7 @@ class MainWidget(QWidget, cUi):
         self.setupUi(self)
         
         # init title
-        self.setWindowTitle('YoloAll V2.0.0')
+        self.setWindowTitle('YoloAll V2.0.1')
 
         # init imagewidget
         self.cImageWidget = ImageWidget()
@@ -52,6 +52,12 @@ class MainWidget(QWidget, cUi):
         with open('./news_id.json', 'r') as f:
             self.news_id = json.load(f)
         self.cBrowser = QWebEngineView()
+        webEngineSettings = self.cBrowser.settings()
+        webEngineSettings.setAttribute(QWebEngineSettings.LocalStorageEnabled, False)
+        engineProfile = self.cBrowser.page().profile()
+        engineProfile.clearHttpCache()
+        cookie = engineProfile.cookieStore()
+        cookie.deleteAllCookies()
         self.cBrowser.load(QUrl('http://www.lgddx.cn/projects/yolo_all/news/index.htm'))
         self.tabWidget.insertTab(2, self.cBrowser, "帮助")
         self.tabWidget.setTabIcon(2, QIcon(QPixmap("./icons/no_news.png")))
