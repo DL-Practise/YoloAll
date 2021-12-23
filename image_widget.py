@@ -12,6 +12,7 @@ import xml.etree.cElementTree as et
 import os
 import cv2
 import math
+import time
 from PIL import Image
 
 # ui配置文件
@@ -111,13 +112,21 @@ class ImageWidget(QWidget, cUi):
                 return 
             self.cAlg.add_img(img)
                       
-    def slot_alg_result(self, img, result, time_spend):
+    def slot_alg_result(self, img, result, time_spend, save_result, save_path):
         if result['type'] == 'info':
             print(result['result'])
             return
         elif result['type'] == 'img':
             img = result['result']
             self.infer = None
+            # need save the result
+            if save_result == 1:
+                if not os.path.exists(save_path):
+                    os.makedirs(save_path)
+                if os.path.exists(save_path):
+                    save_file = os.path.join(save_path, '%f.jpg'%time.time())
+                    cv2.imwrite(save_file, img)
+
         else:
             self.infer = result
                 

@@ -10,13 +10,13 @@ yolov5_n:
     save_dir: ./save/yolov5/yolov5_n/
   normal:
     weight: yolov5n.pt
-    url: [http://www.lgddx.cn/projects/yolo_all/weights/yolov5n.pt, https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5n.pt]
+    url: ['http://www.lgddx.cn/projects/yolo_all/weights/yolov5n.pt', 'https://github.com/ultralytics/yolov5/releases/download/v6.0/yolov5n.pt']
     num_classes: 80
     infer_conf: 0.25
     nms_thre: 0.45
     infer_size: [640, 640]
-    mean: [0., 0., 0.]
-    std: [255., 255., 255.]
+    mean: [0.0, 0.0, 0.0]
+    std: [255.0, 255.0, 255.0]
     class_names: []
 yolov5_s:
   device:

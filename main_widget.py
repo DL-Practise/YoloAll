@@ -143,7 +143,14 @@ class MainWidget(QWidget, cUi):
                 start_time = time.time()
                 ret = self.alg.inference(img)
                 if self.cImageWidget is not None:
-                    self.cImageWidget.slot_alg_result(img, ret, time.time()-start_time)
+                    time_spend = time.time()-start_time
+                    if 'result' not in self.model_cfg.keys():
+                        save_result = 0
+                        save_path = None
+                    else:
+                        save_result = int(self.model_cfg['result']['save_result'])
+                        save_path = self.model_cfg['result']['save_dir']
+                    self.cImageWidget.slot_alg_result(img, ret, time_spend, save_result, save_path)
         
     def add_img(self, img):
         if self.det_thread_queue.full():

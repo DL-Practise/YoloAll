@@ -10,7 +10,7 @@ yolox_nano:
     save_dir: ./save/yolox/yolovx_nano/
   normal:
     weight: yolox_nano.pth
-    url: [http://www.lgddx.cn/projects/yolo_all/weights/yolox_nano.pth, https://github.com/Megvii-BaseDetection/YOLOX/releases/download/0.1.0/yolox_nano.pth]
+    url: ['http://www.lgddx.cn/projects/yolo_all/weights/yolox_nano.pth', 'https://github.com/Megvii-BaseDetection/YOLOX/releases/download/0.1.0/yolox_nano.pth']
     num_classes: 80
     infer_conf: 0.25
     nms_thre: 0.45
