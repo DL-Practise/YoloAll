@@ -75,7 +75,7 @@ class Alg(AlgBase):
         
         # draw det
         if outputs[0] is None:
-            map_result["result"] = img
+            map_result["result"] = img_info["raw_img"]
         else:
             outputs = outputs[0].cpu()
             bboxes = outputs[:, 0:4]

@@ -40,6 +40,7 @@ class ImageWidget(QWidget, cUi):
         self.infer = None
         self.class_map  = None
         self.alg_time = None
+        self.save_result = False
         
         self.color_list = [QColor(255,0,0),
                       QColor(0,255,0),
@@ -121,11 +122,18 @@ class ImageWidget(QWidget, cUi):
             self.infer = None
             # need save the result
             if save_result == 1:
+                #txt_color = (0, 0, 255)
+                #font = cv2.FONT_HERSHEY_SIMPLEX
+                #h,w,c = img.shape
+                #cv2.putText(img, "save result", (w-100, h-10), font, 0.4, txt_color, thickness=1)
+                self.save_result = True
                 if not os.path.exists(save_path):
                     os.makedirs(save_path)
                 if os.path.exists(save_path):
                     save_file = os.path.join(save_path, '%f.jpg'%time.time())
                     cv2.imwrite(save_file, img)
+            else:
+                self.save_result = False
 
         else:
             self.infer = result
@@ -168,6 +176,8 @@ class ImageWidget(QWidget, cUi):
             font.setPixelSize(pointsize*180/72)
             painter.setFont(font)
             painter.drawText(10, 30, 'time=%.4f seconds fps=%.4f' % (self.alg_time, 1 / self.alg_time))
+            if self.save_result:
+                painter.drawText(int(self.width() * 0.75), int(self.height() * 0.98), 'save result')
         else:
             if self.qpixmap_bg is not None:
                 painter.drawPixmap(QtCore.QRect(0, 0, self.width(), self.height()), self.qpixmap_bg)
