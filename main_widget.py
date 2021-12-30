@@ -34,8 +34,15 @@ class MainWidget(QWidget, cUi):
         cUi.__init__(self)
         self.setupUi(self)
         
+        # read info
+        with open('./info.json', 'r') as f:
+            self.info = json.load(f)
+
         # init title
-        self.setWindowTitle('YoloAll V2.0.1')
+        self.setWindowTitle(self.info['version'])
+        icon = QIcon()
+        icon.addPixmap(QPixmap('./icons/logo.png'))
+        self.setWindowIcon(icon)
 
         # init imagewidget
         self.cImageWidget = ImageWidget()
@@ -49,8 +56,6 @@ class MainWidget(QWidget, cUi):
 
         # init help widget
         self.has_news = False
-        with open('./news_id.json', 'r') as f:
-            self.news_id = json.load(f)
         self.cBrowser = QWebEngineView()
         webEngineSettings = self.cBrowser.settings()
         webEngineSettings.setAttribute(QWebEngineSettings.LocalStorageEnabled, False)
@@ -118,11 +123,11 @@ class MainWidget(QWidget, cUi):
         for line in lines:
             if 'news_id' in line:
                 id = int(line.split(':')[-1])
-                if id != self.news_id['news_id']:
-                    self.news_id['news_id'] = id
+                if id != self.info['news_id']:
+                    self.info['news_id'] = id
                     self.has_news = True
-                    with open('./news_id.json', 'w') as f:
-                        json.dump(self.news_id, f)
+                    with open('./info.json', 'w') as f:
+                        json.dump(self.info, f)
                     self.log_sig.emit('news_id')
                     break
                 

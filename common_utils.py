@@ -213,7 +213,8 @@ def del_all_model_zoo_modules():
 
 def add_one_model_path(alg_name):
     sub_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'model_zoo/'+ alg_name)
-    sys.path.append(sub_dir)
+    #sys.path.append(sub_dir)
+    sys.path.insert(0, sub_dir)
    
 def get_api_from_model(alg_name):
     api = None
