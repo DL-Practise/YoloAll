@@ -26,13 +26,13 @@ yolox_tiny:
     save_dir: ./save/yolox/yolovx_tiny/
   normal:
     weight: yolox_tiny.pth
-    url: [http://www.lgddx.cn/projects/yolo_all/weights/yolox_tiny.pth, https://github.com/Megvii-BaseDetection/YOLOX/releases/download/0.1.1rc0/yolox_tiny.pth]
+    url: ['http://www.lgddx.cn/projects/yolo_all/weights/yolox_tiny.pth', 'https://github.com/Megvii-BaseDetection/YOLOX/releases/download/0.1.1rc0/yolox_tiny.pth']
     num_classes: 80
     infer_conf: 0.25
     nms_thre: 0.45
     infer_size: [416, 416]
-    rgb_means: [0.485, 0.456, 0.406]
-    std: [0.229, 0.224, 0.225]
+    rgb_means: [0, 0, 0]
+    std: [1, 1, 1]
     class_names: []
 yolox_s:
   device:
@@ -42,13 +42,13 @@ yolox_s:
     save_dir: ./save/yolox/yolovx_s/
   normal:
     weight: yolox_s.pth
-    url: [http://www.lgddx.cn/projects/yolo_all/weights/yolox_s.pth, https://github.com/Megvii-BaseDetection/YOLOX/releases/download/0.1.1rc0/yolox_s.pth]
+    url: ['http://www.lgddx.cn/projects/yolo_all/weights/yolox_s.pth', 'https://github.com/Megvii-BaseDetection/YOLOX/releases/download/0.1.1rc0/yolox_s.pth']
     num_classes: 80
     infer_conf: 0.25
     nms_thre: 0.45
     infer_size: [640, 640]
-    rgb_means: [0.485, 0.456, 0.406]
-    std: [0.229, 0.224, 0.225]
+    rgb_means: [0, 0, 0]
+    std: [1, 1, 1]
     class_names: []
 yolox_m:
   device:
@@ -58,13 +58,13 @@ yolox_m:
     save_dir: ./save/yolox/yolovx_m/
   normal:
     weight: yolox_m.pth
-    url: [http://www.lgddx.cn/projects/yolo_all/weights/yolox_m.pth, https://github.com/Megvii-BaseDetection/YOLOX/releases/download/0.1.1rc0/yolox_m.pth]
+    url: ['http://www.lgddx.cn/projects/yolo_all/weights/yolox_m.pth', 'https://github.com/Megvii-BaseDetection/YOLOX/releases/download/0.1.1rc0/yolox_m.pth']
     num_classes: 80
     infer_conf: 0.25
     nms_thre: 0.45
     infer_size: [640, 640]
-    rgb_means: [0.485, 0.456, 0.406]
-    std: [0.229, 0.224, 0.225]
+    rgb_means: [0, 0, 0]
+    std: [1, 1, 1]
     class_names: []
 yolox_l:
   device:

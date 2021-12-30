@@ -194,11 +194,18 @@ def preproc(image, input_size, mean, std, swap=(2, 0, 1)):
     padded_img[: int(img.shape[0] * r), : int(img.shape[1] * r)] = resized_img
 
     padded_img = padded_img[:, :, ::-1]
-    padded_img /= 255.0
-    if mean is not None:
-        padded_img -= mean
-    if std is not None:
-        padded_img /= std
+
+    # yolox release 0.1.1 pre release has bug here
+    # yolox_nano.pth is trained as norm and sub mean and div std
+    # but yolox_tiny.pth/s.pth/m.pth.l.pth were trained without normed to 0-1,and not sub mean and div std
+    if mean[0] == 0 and std[0] == 1:
+        pass
+    else:
+        padded_img /= 255.0
+        if mean is not None:
+            padded_img -= mean
+        if std is not None:
+            padded_img /= std
     padded_img = padded_img.transpose(swap)
     padded_img = np.ascontiguousarray(padded_img, dtype=np.float32)
     return padded_img, r
